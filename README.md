@@ -53,7 +53,7 @@ __Klawisze:__
 
 #### Screenshot
 Swoją drogą, ciekawe, czy ktoś otrzymał taki numer?   
-![chkpesel](/IMG/chkpesel.jpg)
+![chkpesel](/IMG/CHKPESEL.JPG)
 
 ## KOMPATYBILNOŚĆ
  - __DOSBox 0.74+__ - CHKPESEL został przebudowany i ponownie skomplilowany pod tym emulatorem.   
