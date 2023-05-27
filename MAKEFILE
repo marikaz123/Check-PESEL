@@ -1,0 +1,34 @@
+# Build CHKPESEL.EXE
+
+CHKPESEL.EXE: MAIN.OBJ CD.OBJ CI.OBJ GBD.OBJ GCL.OBJ GP.OBJ GA.OBJ LYCS.LIB
+              TLINK /x MAIN.OBJ+CD.OBJ+CI.OBJ+GBD.OBJ+GCL.OBJ+GP.OBJ+GA.OBJ+LYCS.LIB,CHKPESEL.EXE
+
+MAIN.OBJ: CLEAN MAIN.ASM
+          TASM /m3 MAIN.ASM
+CLEAN:
+       DEL MAIN.OBJ
+
+CD.OBJ: CD.ASM
+        TASM /m3 CD.ASM
+CI.OBJ: CI.ASM
+        TASM /m3 CI.ASM
+GBD.OBJ: GBD.ASM
+         TASM /m3 GBD.ASM
+GCL.OBJ: GCL.ASM
+         TASM /m3 GCL.ASM
+GP.OBJ: GP.ASM
+        TASM /m3 GP.ASM
+GA.OBJ: GA.ASM
+        TASM /m3 GA.ASM
+
+# ----- LYCS.LIB - Algorytmy wyznaczania -roku przestepnego
+#                                        -sumy kontrolnej
+# Nie beda juz zmienianie
+
+LYCS.LIB: LY.OBJ CS.OBJ
+          tlib LYCS.LIB +LY.OBJ +CS.OBJ
+
+LY.OBJ: LY.ASM
+        TASM /m3 LY.ASM
+CS.OBJ: CS.ASM
+        TASM /m3 CS.ASM

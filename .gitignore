@@ -1,0 +1,11 @@
+*.COM
+*.EXE
+*.BAT
+*.OBJ
+*.TR
+*.MAP
+*.BAK
+*.LIB
+/BKUP
+/TMP
+/BUILD

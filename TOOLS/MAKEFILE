@@ -1,0 +1,16 @@
+# CHKPESEL TOOLS
+
+bdgen.com: bdgen.obj
+           tlink /t /x bdgen.obj
+bdgen.obj: bdgen.asm
+           tasm /m3 bdgen.asm
+
+cdgen.com: cdgen.obj
+           tlink /t /x cdgen.obj
+cdgen.obj: cdgen.asm
+           tasm /m3 cdgen.asm
+
+clean:
+       del *.obj
+       del *.map
+       del *.tr
