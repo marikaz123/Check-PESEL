@@ -12,6 +12,7 @@ W przeciwieństwie do sprawdzarek internetowych:
 - CHKPESEL nie opowiada bzdur. Jeżeli sprawdza numer z przyszłą datą urodzenia, to w polu wiek będzie napis 'nd.' a nie minus 80 na przykład.
 - CHKPESEL nie zmyśla i nie podaje daty urodzenia oraz płci w przypadku, gdy numer PESEL dostaje ocenę NEG. Nie wiadomo przecież na której pozycji wystapił błąd.
 - CHKPESEL podaje wiek w latach UKOŃCZONYCH, wiec jeżeli ktoś urodził się 10.04.2006 r., to w polu wiek zobaczy 18 dopiero 11.04.2024.
+- CHKPESEL działa w pełnym zakresie dat urodzenia jaki został przewidziany dla systemu PESEL.
 
 ## DZIAŁANIE
 CHKPESEL sprawdza zgodnoość wprowadzonego numeru PESEL na podstawie:
