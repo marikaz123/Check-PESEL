@@ -27,15 +27,18 @@ chkpesel /p:<PESEL>
 ```
 W tym trybie sprawdzany jest PESEL podany w linii poleceń i wyświetlane jest info o statusie:
 
-|wariant:          |dobry      |zły        |z przyszłości |
-|-----------------:|:----------|:----------|:-------------|
-|Ocena wzg. wzorca:|POZ        |NEG        |POZ           |
-|Data urodzenia:   |1985/12/03 |0000/00/00 |2153/11/05 !  |
-|Plec:             |M lub K    |-          |M lub K       |
-|Wiek:             |38         |-          |nd.           |   
+|wariant: |dobry |zły |z przyszłości |
+|---:|:---|:---|:---|
+|Ocena wzg. wzorca:|POZ |NEG |POZ |
+|Data urodzenia: |1985/12/03 |0000/00/00 |2153/11/05 ! |
+|Plec: |M lub K |- |M lub K |
+|Wiek: |38 (< 1) |- |nd.|   
 
 Po wyświetleniu informacji program kończy działanie.   
-W przypadku błędu składni program wyświetli informację o poprawnym użyciu i przejdzie do trybu z interfejsem użytkownika.      
+W przypadku błędu składni program wyświetli informację o poprawnym użyciu i przejdzie do trybu z interfejsem użytkownika.   
+
+Screenshot:<sup>*</sup>   
+![chkpesel cl](/IMG/chkp_cl.jpg)
 
 #### Z interfejsem użytkownika.   
 ```
@@ -48,13 +51,13 @@ W tym trybie można przeprowadzić dowolna ilość sprawdzeń wpisujac numer PES
 Po wprowadzeniu numeru i zatwierdzeniu `ENTER` wypełniany jest formularz z informacjami (jak w trybie z linii poleceń).   
 Kolejne wciśnięcie `ENTER` czyści formularz i pozwala na wpisanie kolejnego numeru.   
 
+Screenshot:<sup>*</sup>   
+![chkpesel ui](/IMG/chkp_ui.jpg)
+
+
 __Klawisze:__     
 `ENTER` - Sprawdź numer po jego wprowadzeniu / wprowadź następny numer.   
 `ESC` - Wyjdz do DOS.   
-
-#### Screenshot
-Swoją drogą, ciekawe, czy ktoś otrzymał taki numer?   
-![chkpesel](/IMG/CHKPESEL.JPG)
 
 ## KOMPATYBILNOŚĆ
  - __DOSBox 0.74+__ - CHKPESEL został przebudowany i ponownie skomplilowany pod tym emulatorem.   
@@ -82,14 +85,8 @@ __ver. 2.1 (05/2023)__
 `~` Poprawiono drobne błędy.   
 `~` Zmieniono algorytm liczenia cyfry kontrolnej (patrz: zrodło poz. 2)   
 
-__ver. 2.0 beta (04/2023)__ - niedostepna w repo.   
-`~` Rozbudowa programu. Wiele zmian i poprawek.   
-`+` Prosty interfejs użytkownika.   
-`+` Informacje: data urodzenia, płeć.   
+Poprzednie wersje niedostępne w repozytorium.
 
-__ver. 1.0 (~10/1993)__ - niedostepna w repo.   
-`+` Pierwsza wersja.   
-Kod udostępniony kiedyś we fragmentach na usenecie. Podaje tylko info o poprawności wzg. wzorca, a PESEL tylko z linii komend DOS.   
-<hr />   
+<sup>*</sup> PESEL __nie należy__ do żadnej konkretnej osoby. Został wygenerowany narzędziami z /TOOLS na podstawie przypadkowych danych.
 
 ###### CHKPESEL <sub>ver. 2.1</sub> 1993 'marikaz'
