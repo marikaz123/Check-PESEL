@@ -1,5 +1,5 @@
 ;----------------------------------------------------------------------------
-; Part of CHKPESEL v. 2.1 ** GetAge Rev. 0 ** MOD0523 **
+; Part of CHKPESEL v. 2.2 ** GetAge rev. 0 ** MOD0623 **
 ;----------------------------------------------------------------------------
 
 code SEGMENT PUBLIC 'code'
@@ -7,11 +7,6 @@ code SEGMENT PUBLIC 'code'
      ASSUME cs:code,ds:data
 
 GetAge          PROC
-                ;wyczysc poprzednie wpisy
-                mov [data4],20h
-                mov [data4+1],20h
-                mov [data4+2],20h
-
                 mov ah,2ah
                 int 21h
                 cmp year,cx
@@ -19,7 +14,7 @@ GetAge          PROC
                 sub cx,year
                 jz checkM0     ;biezacy rok
                 mov tmpAge,cx  ;przynajmniej 1
-                cmp month,dh   ;teraz miesiac
+                cmp month,dh
                 jb correctA
                 ja sub1year
 
@@ -35,8 +30,8 @@ GetAge          PROC
                 cmp day,dl
                 jb correctA    ;nawet 1 dzien niech bedzie ok
 notBorn:
-                mov [data4],'n'
-                mov [data4+1],'d'
+                mov [data4],'N'     ;data z przyszlosci
+                mov [data4+1],'D'
                 mov [data4+2],'.'
                 mov [data2+11],'!'
                 ret
@@ -91,8 +86,8 @@ GetAge          ENDP
 code ENDS
 
 data SEGMENT PUBLIC 'data'
-EXTRN year:word,month:byte,day:byte
-EXTRN data2:byte,data4:byte
-tmpAge dw 0
+     EXTRN year:WORD,month:BYTE,day:BYTE
+     EXTRN data2:BYTE,data4:BYTE
+tmpAge DW 0
 data ENDS
      END

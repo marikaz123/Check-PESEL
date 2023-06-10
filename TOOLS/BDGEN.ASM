@@ -1,29 +1,29 @@
-; Gen. daty urodzenia dla PESEL ** 'marikaz'
-;--------------------------------------------------------------
+; Koder daty urodzenia dla PESEL                                    'marikaz'
+;----------------------------------------------------------------------------
 ; Enter - koduj, F2 - wpisz kolejny numer, Esc - Wyjscie
-;--------------------------------------------------------------
-; 1800 <= year <= 2299, 0 <= month <= 19, 0 <= day <= 49
-; wystaeczy aby zakodowac poprawna lub bledna date do testow
+;----------------------------------------------------------------------------
+; NOTES: 1800 <= year <= 2299, 0 <= month <= 19, 0 <= day <= 49
+;        wystaeczy aby zakodowac poprawna lub bledna date do testow.
 
-
-code     segment
-         assume cs:code
-         org 100h
+code     SEGMENT
+         ASSUME cs:code
+         ORG 100h
 start:
          jmp begin
-info     db '+.....:y...m.d.$'
-prompt   db 13,10,"      :$"
-buffer   db 9,?,9 dup (0)
-pDate    db '      $'
-year     dw ?
-month    db ?
+
+info     DB '+.....:y...m.d.$'
+prompt   DB 13,10,"      :$"
+buffer   DB 9,?,9 dup (0)
+pDate    DB '      $'
+year     DW ?
+month    DB ?
 
 JUMPS
+
 begin:
          mov dx,OFFSET info
          mov ah,9
          int 21h
-
 do:
          mov dx,OFFSET prompt
          mov ah,9
@@ -176,5 +176,5 @@ errd:
          int 21h
          jmp whileK
 
-code ends
-     end start
+code ENDS
+     END start

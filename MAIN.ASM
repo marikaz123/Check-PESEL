@@ -1,5 +1,5 @@
 ;----------------------------------------------------------------------------
-; ++++ CHKPESEL v2.1 ++ MAIN Rev. 0 ++ MOD0523 ++ (c)1993 'marikaz' ++++
+; ++++ CHKPESEL v2.2 ++ MAIN rev. 1 ++ MOD0623 ++ (c)1993 'marikaz' ++++
 ;----------------------------------------------------------------------------
 ; NOTES:
 ; Program sprawdza poprawnosc numeru PESEL na podstawie sensownosci zakodo-
@@ -9,28 +9,29 @@
 code SEGMENT PUBLIC 'code'
      ASSUME cs:code,ds:data
 
-EXTRN GetCommandLine:proc
-EXTRN GetBirthDate:proc
-EXTRN GetPESELfromCon:proc
-EXTRN CheckDay:proc
-EXTRN LeapYear:proc
-EXTRN CheckSum:proc
-EXTRN GetAge:proc
-EXTRN VeryficationNEG:proc,VeryficationPOZ:proc,ClearForm:proc
+     EXTRN GetCommandLine:PROC
+     EXTRN GetBirthDate:PROC
+     EXTRN GetPESELfromCon:PROC
+     EXTRN CheckDay:PROC
+     EXTRN LeapYear:PROC
+     EXTRN CheckSum:PROC
+     EXTRN GetDayOfWeek:PROC
+     EXTRN GetAge:PROC
+     EXTRN VeryficationNEG:PROC,VeryficationPOZ:PROC,ClearForm:PROC
 
-main         PROC
+Main         PROC
              call GetCommandLine        ;GCL.ASM
              mov ax,data
              mov ds,ax
              cmp statCL,1
              je  cmdLineMode
              cmp statCL,11b
-             jne  waUsage
-             lea dx,CMDErrTxt
+             jne waUsage
+             lea dx,cmdErrTxt
              mov ah,9
              int 21h
     waUsage:
-             lea dx,Interface
+             lea dx,interface
              mov ah,9
              int 21h
 
@@ -38,11 +39,10 @@ main         PROC
              mov ah,3
              mov bx,0
              int 10h
-             ;wypelnienie zmiennych pozycji i ksztaltu kursora
-             mov CurPosRef,dx
-             mov CurShapeRef,cx
-             mov CurShapeCus,cx    ;mozna wlasny (tu standardowy)
-             mov CurShapeHid,2020h ;niewidoczny
+             mov curPosRef,dx
+             mov curShapeRef,cx
+             mov curShapeCus,cx    ;(tu standardowy)
+             mov curShapeHid,2020h ;niewidoczny
 
 do:
              call ClearForm
@@ -53,21 +53,22 @@ cmdLineMode:
              call GetBirthDate          ;GBD.ASM
              cmp ax,-1
              je wrongPESEL
-             call LeapYear              ;LY.ASM
+             call LeapYear              ;LY.ASM (ALGS.LIB)
              mov statLY,al
              call CheckDay              ;CD.ASM
              cmp ax,-1
              je  wrongPESEL
-             call CheckSum              ;CS.ASM
+             call CheckSum              ;CS.ASM (ALGS.LIB)
              cmp ax,-1
              je wrongPESEL
              call GetAge                ;GA.ASM
+             call GetDayOfWeek          ;DOW.ASM (ALGS.LIB)
              call VeryficationPOZ       ;CI.ASM
              cmp statCL,1
              je exitCL
              jmp while_esc
 
- wrongPESEL:
+wrongPESEL:
              call VeryficationNEG       ;CI.ASM
              cmp statCL,1
              je exitCL
@@ -90,36 +91,38 @@ exitNow:
              int 10h
              mov ax,4c00h
              int 21h
-    exitCL:
+exitCL:
              mov al,errlvl
              mov ah,4ch
              int 21h
-main         ENDP
+Main         ENDP
 
 code ENDS
 
 data SEGMENT PUBLIC 'data'
-PUBLIC pesel,year,month,day
-PUBLIC CurShapeRef,CurShapeHid,CurShapeCus,CurPosRef
-PUBLIC statLY,statCL
-PUBLIC dataRegionC,dataRegion,endRegion,errlvl
-PUBLIC data1,data2,data3,data4
+     PUBLIC pesel,year,month,day,h
+     PUBLIC CurShapeRef,CurShapeHid,CurShapeCus,CurPosRef
+     PUBLIC statLY,statCL
+     PUBLIC dataRegion,endRegion,data0,data1,data2,data3,data4
+     PUBLIC errlvl
 
 pesel         DB 11 DUP (?)
 year          DW ?
 month         DB ?
 day           DB ?
+h             DW ?
 CurPosRef     DW ?
 CurShapeRef   DW ?
 CurShapeHid   DW ?
 CurShapeCus   DW ?
 statLY        DB ?   ;LeapYear wpisuje bezposrednio 1:0
-statCL        DB 0
+statCL        DB 0   ;status linii polecen
 errlvl        DB 0
-INCLUDE iface.inc
+
+              INCLUDE iface.inc
 data ENDS
 
 _stk SEGMENT STACK 'stack'
-dw 64 dup (?)
+DW 64 DUP (?)
 _stk ENDS
-     END main
+     END Main

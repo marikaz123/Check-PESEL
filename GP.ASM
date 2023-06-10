@@ -1,30 +1,33 @@
 ;----------------------------------------------------------------------------
-; Part of CHKPESEL v. 2.1 ** GetPESELfromCon Rev. 1 ** MOD0423 **
+; Part of CHKPESEL v. 2.2 ** GetPESELfromCon rev. 2 ** MOD0623 **
 ;----------------------------------------------------------------------------
 
+cHighlight = 0*16+15            ;highlight = kolor tla*16 + kolor znaku
+cLeadChar  = '.'                ;znak wiodacy w polu
+
 code SEGMENT PUBLIC 'code'
-PUBLIC GetPESELfromCon
-ASSUME cs:code, ds:data
+     PUBLIC GetPESELfromCon
+     ASSUME cs:code,ds:data
 
 GetPESELfromCon    PROC
                    mov ah,2
                    mov bh,0
-                   mov dx,CurPosRef
+                   mov dx,curPosRef
                    sub dh,9
                    add dl,20        ;od pozycji ref.
-                   mov CurPosTMP,dl
+                   mov curPosTMP,dl
                    int 10h
                    mov ah,1
                    mov cx,[curShapeCus]
                    int 10h
                    mov ah,9
-                   mov bx,0fh   ;kolor
-                   mov al,'.'
+                   mov bx,cHighlight
+                   mov al,cLeadChar
                    mov cx,11
                    int 10h
                    lea bx,pesel
                    mov cx,0
-         GetDigit:
+         getDigit:
                    cmp cx,11
                    je wait13h
                    mov ah,0
@@ -34,9 +37,9 @@ GetPESELfromCon    PROC
                    cmp al,8       ;backspace
                    je decCurPos
                    cmp al,30h
-                   jb GetDigit
+                   jb getDigit
                    cmp al,39h
-                   ja GetDigit
+                   ja getDigit
                    jmp incCurPos
           wait13h:
                    mov ah,0
@@ -49,26 +52,26 @@ GetPESELfromCon    PROC
                    je brk
                    jmp wait13h
 decCurPos:
-                   cmp dl, byte ptr [CurPosTMP]
-                   je GetDigit
+                   cmp dl, BYTE PTR [curPosTMP]
+                   je getDigit
                    dec dl
                    mov ah,2
                    int 10h
                    mov ah,0ah
-                   mov al,'.'
+                   mov al,cLeadChar
                    push cx
                    mov cx,1
                    int 10h
                    pop cx
                    dec cx
                    dec bx
-                   jmp GetDigit
+                   jmp getDigit
 incCurPos:
                    mov ah,9
                    push bx
                    push cx
                    mov cx,1
-                   mov bx,0fh  ;kolor
+                   mov bx,cHighlight
                    int 10h
                    pop cx
                    pop bx
@@ -76,10 +79,10 @@ incCurPos:
                    mov ah,2
                    int 10h
                    sub al,30h
-                   mov byte ptr [bx],al
+                   mov BYTE PTR [bx],al
                    inc bx
                    inc cx
-                   jmp GetDigit
+                   jmp getDigit
 brk:
                    mov ax,-1
                    ret
@@ -92,8 +95,8 @@ GetPESELfromCon    ENDP
 code ENDS
 
 data SEGMENT PUBLIC 'data'
-CurPosTMP db ?
-EXTRN pesel:byte
-EXTRN CurShapeHid:word,CurShapeCus:word,CurPosRef:word
+     EXTRN pesel:BYTE
+     EXTRN CurShapeHid:WORD,CurShapeCus:WORD,CurPosRef:WORD
+curPosTMP DB ?
 data ENDS
      END

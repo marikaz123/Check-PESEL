@@ -1,10 +1,11 @@
 ;----------------------------------------------------------------------------
-; Part of CHKPESEL v. 2.1 ** CI Rev. 0 ** MOD0523 **
+; Part of CHKPESEL v. 2.2 ** CI.ASM rev. 2 ** MOD0623 **
 ;----------------------------------------------------------------------------
 ; VeryficationNEG:PROC
 ; VeryficationPOZ:PROC
-;       ClearForm:PROC
-;          GetSex:PROC
+; ClearForm      :PROC
+; GetSex         :PROC
+
 
 code SEGMENT PUBLIC 'code'
      ASSUME cs:code,ds:data
@@ -12,42 +13,50 @@ code SEGMENT PUBLIC 'code'
 
 ClearForm           PROC
                     lea bx,data1
-                    mov byte ptr [bx],'-'
-                    mov byte ptr [bx+1],' '
-                    mov byte ptr [bx+2],' '
+                    mov BYTE PTR [bx],'-'
+                    mov WORD PTR [bx+1],2020h
                     lea bx,data2
-                    mov byte ptr [bx+10],20h
-                    mov byte ptr [bx+11],20h
-                    jmp clearF
-VeryficationNEG:
-                    lea bx,data1
-                    mov byte ptr [bx],'N'
-                    mov byte ptr [bx+1],'E'
-                    mov byte ptr [bx+2],'G'
-            clearF:
+                    mov WORD PTR [bx+10],2020h
+                    lea bx,data0
+                    mov cx,12
+             clrD0:
+                    mov BYTE PTR [bx],20h
+                    inc bx
+                    loop clrD0
                     lea bx,data2
-                    mov word ptr [bx],3030h
-                    mov word ptr [bx+2],3030h
-                    mov word ptr [bx+5],3030h
-                    mov word ptr [bx+8],3030h
+                    mov WORD PTR [bx],3030h
+                    mov WORD PTR [bx+3],3030h
+                    mov WORD PTR [bx+6],3030h
+                    mov WORD PTR [bx+8],3030h
                     lea bx,data3
-                    mov byte ptr [bx],'-'
-                    lea bx,EndRegion
-                    mov byte ptr [bx],'$'
+                    mov BYTE PTR [bx],'-'
                     lea bx,data4
-                    mov byte ptr [bx],'-'
-                    mov byte ptr [bx+1],20h
-                    mov byte ptr [bx+2],20h
-                    mov errlvl,1
+                    mov BYTE PTR [bx],'-'
+                    mov WORD PTR [bx+1],2020h
+                    lea bx,endRegion
+                    mov BYTE PTR [bx],'$'
                     call printDR
                     ret
 ClearForm           ENDP
 
+
+VeryficationNEG     PROC
+                    lea bx,data1
+                    mov BYTE PTR [bx],'N'
+                    mov BYTE PTR [bx+1],'E'
+                    mov BYTE PTR [bx+2],'G'
+                    lea bx,endRegion
+                    mov BYTE PTR [bx],'$'
+                    call printDR
+                    mov errlvl,1
+                    ret
+VeryficationNEG     ENDP
+
 VeryficationPOZ     PROC
                     lea bx,data1
-                    mov byte ptr [bx],'P'
-                    mov byte ptr [bx+1],'O'
-                    mov byte ptr [bx+2],'Z'
+                    mov BYTE PTR [bx],'P'
+                    mov BYTE PTR [bx+1],'O'
+                    mov BYTE PTR [bx+2],'Z'
 
                     ;ROK
                     lea bx,data2
@@ -55,31 +64,31 @@ VeryficationPOZ     PROC
                     mov ax,year
                     div divisor
                     add dx,30h
-                    mov [bx+3],dl
+                    mov [bx+9],dl
                     xor dx,dx
                     div divisor
                     add dx,30h
-                    mov [bx+2],dl
+                    mov [bx+8],dl
                     xor dx,dx
                     div divisor
                     add dl,30h
-                    mov [bx+1],dl
+                    mov [bx+7],dl
                     add al,30h
-                    mov [bx],al
+                    mov [bx+6],al
 
                     ;MIESIAC
                     mov al,month
                     cmp al,9
                     ja twoDig
-                    mov byte ptr [bx+5],'0'
+                    mov BYTE PTR [bx+3],'0'
                     add al,30h
-                    mov byte ptr [bx+6],al
+                    mov BYTE PTR [bx+4],al
                     jmp complDay
             twoDig:
-                    mov byte ptr [bx+5],'1'
+                    mov BYTE PTR [bx+3],'1'
                     sub al,10
                     add al,30h
-                    mov [bx+6],al
+                    mov [bx+4],al
 
                     ;DZIEN
           complDay:
@@ -88,23 +97,43 @@ VeryficationPOZ     PROC
                     xor dx,dx
                     div divisor
                     add al,30h
-                    mov [bx+8],al
+                    mov [bx],al
                     add dl,30h
-                    mov [bx+9],dl
+                    mov [bx+1],dl
                     call GetSex
                     lea bx,EndRegion
-                    mov byte ptr [bx],'$'
-                    mov errlvl,0
+                    mov BYTE PTR [bx],'$'
+
+                    ;DZIEN TYG.
+                    cmp BYTE PTR [data2+11],'!' ;wyk. jako marker
+                    je skipDoW
+
+                    mov BYTE PTR [data2+10],','
+                    xor dx,dx
+                    mov ax,h
+                    mov bx,12
+                    mul bx
+                    mov bx,ax
+                    lea si,[dowName+bx]
+                    lea bx,data0
+                    mov cx,12
+            cpyDoW:
+                    lodsb
+                    mov [bx],al
+                    inc bx
+                    loop cpyDoW
+           skipDoW:
                     call printDR
+                    mov errlvl,0
                     ret
-                    ENDP
+VeryficationPOZ     ENDP
 
 PrintDR             PROC
                     cmp statCL,1
                     je prnCL
                     mov ah,2
                     mov bx,0
-                    mov dx,CurPosRef
+                    mov dx,curPosRef
                     sub dh,8
                     int 10h
                     lea dx,dataRegion
@@ -113,7 +142,7 @@ PrintDR             PROC
                     ret
              prnCL:
                     mov ax,0a0dh
-                    mov word ptr [EndRegion-2],ax
+                    mov WORD PTR [endRegion-2],ax
                     lea dx,dataRegion
                     mov ah,9
                     int 21h
@@ -131,15 +160,24 @@ GetSex              PROC
                     ret
 GetSex              ENDP
 
-
-
 code ENDS
 data SEGMENT PUBLIC 'data'
-     EXTRN data1:byte,data2:byte,data3:byte,data4:byte
-     EXTRN dataRegionC,dataRegion,endRegion
-     EXTRN CurPosRef:word
-     EXTRN year:word,month:byte,day:byte
-     EXTRN statCL:byte,errlvl:byte,pesel:byte
-     divisor dw 10
+
+     EXTRN data0:BYTE,data1:BYTE,data2:BYTE,data3:BYTE,data4:BYTE
+     EXTRN dataRegion,endRegion
+     EXTRN curPosRef:WORD
+     EXTRN year:WORD,month:BYTE,day:BYTE
+     EXTRN statCL:BYTE,errlvl:BYTE,pesel:BYTE
+     EXTRN h:WORD
+
+divisor  DW 10
+dowName  DB 'SOBOTA      '
+         DB 'NIEDZIELA   '
+         DB 'PONIEDZIALEK'
+         DB 'WTOREK      '
+         DB 'SRODA       '
+         DB 'CZWARTEK    '
+         DB 'PIATEK      '
+
 data ENDS
      END

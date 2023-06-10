@@ -1,18 +1,19 @@
-; Generator cyfry kontrolnej dla numeru PESEL                ** 'marikaz'
-; Enter - oblicz  F2 - wpisz kolejny numer, Esc - Wyjscie
+; Generator cyfry kontrolnej obliczany algorytmem PESEL            'marikaz'
+; Enter - oblicz, F2 - wpisz kolejny numer, Esc - Wyjscie
 ;---------------------------------------------------------------------------
 
-code     segment
-         assume cs:code
-         org 100h
+code     SEGMENT
+         ASSUME cs:code
+         ORG 100h
 start:
          jmp begin
-info     db '+:..cyfry...$'
-prompt   db 13,10," :$"
-buffer   db 11,?,11 dup (0)
-chkdig   db ' $'
-mls      db ?,?,9,7,3,1,9,7,3,1,9,7
-sum      dw 0
+         
+info     DB '+:..cyfry...$'
+prompt   DB 13,10," :$"
+buffer   DB 11,?,11 dup (0)
+chkdig   DB ' $'
+mls      DB ?,?,9,7,3,1,9,7,3,1,9,7
+sum      DW 0
 
 begin:
          mov dx,OFFSET info
@@ -25,7 +26,7 @@ do:
          mov dx,OFFSET buffer
          mov ah,0ah
          int 21h
-         mov word ptr [sum],0
+         mov WORD PTR [sum],0
          mov bx,2
          mov cx,10
          xor dx,dx
@@ -65,5 +66,5 @@ errC:
          mov ah,9
          int 21h
          jmp whileKey
-code     ends
-end      start
+code     ENDS
+         END start

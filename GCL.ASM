@@ -1,5 +1,5 @@
 ;----------------------------------------------------------------------------
-; Part of CHKPESEL v. 2.1 ** GetCommandLine Rev. 1 ** MOD0523 **
+; Part of CHKPESEL v. 2.2 ** GetCommandLine rev. 1 ** MOD0523 **
 ;----------------------------------------------------------------------------
 
 code SEGMENT PUBLIC 'code'
@@ -10,7 +10,7 @@ GetCommandLine   PROC
                  mov ax,data
                  mov es,ax
                  mov si,80h
-                 cmp byte ptr [si],0
+                 cmp BYTE PTR [si],0
                  je noGCL
                  inc si
          findSW:
@@ -21,8 +21,8 @@ GetCommandLine   PROC
                  je findSW
                  cmp al,9
                  je findSW
-                 cmp si,0f0h
-                 je errorGCL
+                 cmp al,0dh
+                 je noGCL
         foundSW:
                  lodsw
                  or al,0100000b
@@ -40,21 +40,25 @@ GetCommandLine   PROC
                  sub al,30h
                  stosb
                  loop get11d
-
+        skipBS:                    ;pomin 'sp' 'tab' po numerze
                  lodsb
+                 cmp al,20h
+                 je skipBS
+                 cmp al,9
+                 je skipBS
                  cmp al,0dh
                  je setGCL
 
 errorGCL:
-                 add byte ptr es:[statCL],10b
+                 add BYTE PTR es:[statCL],10b
 setGCL:
-                 add byte ptr es:[statCL],1
+                 add BYTE PTR es:[statCL],1
 noGCL:
                  ret
 GetCommandLine   ENDP
 code ENDS
 
 data  SEGMENT PUBLIC 'data'
-EXTRN pesel:byte,statCL:byte
+      EXTRN pesel:BYTE,statCL:BYTE
 data  ENDS
       END

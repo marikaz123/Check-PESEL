@@ -5,10 +5,10 @@ bdgen.com: bdgen.obj
 bdgen.obj: bdgen.asm
            tasm /m3 bdgen.asm
 
-cdgen.com: cdgen.obj
-           tlink /t /x cdgen.obj
-cdgen.obj: cdgen.asm
-           tasm /m3 cdgen.asm
+#cdgen.com: cdgen.obj
+#           tlink /t /x cdgen.obj
+#cdgen.obj: cdgen.asm
+#           tasm /m3 cdgen.asm
 
 clean:
        del *.obj

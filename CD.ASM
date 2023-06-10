@@ -1,5 +1,5 @@
 ;----------------------------------------------------------------------------
-; Part of CHKPESEL v. 2.0 ** CheckDay Rev. 1 ** MOD0523 **
+; Part of CHKPESEL v. 2.2 ** CheckDay rev. 1 ** MOD0523 **
 ;----------------------------------------------------------------------------
 
 code SEGMENT PUBLIC 'code'
@@ -12,7 +12,7 @@ CheckDay           PROC
                    cmp day,31
                    ja errorCD
 
-                   ; do 28 prawidlowe wszystjie miesiace
+                   ;do 28 prawidlowe sa wszystjie miesiace
                    cmp day,28
                    jbe retCD
 
@@ -30,8 +30,8 @@ CheckDay           PROC
                    cmp month,2    ;tylko luty nie moze miec 30 dni
                    je errorCD
                    jmp retCD
-         check31:
 
+         check31:
                    cmp month,2    ;tradycyjnie luty
                    je  errorCD
                    cmp month,4
@@ -52,6 +52,6 @@ CheckDay           ENDP
 code ENDS
 
 data  SEGMENT PUBLIC 'data'
-      EXTRN month:byte,day:byte,statLY:byte
+      EXTRN month:BYTE,day:BYTE,statLY:BYTE
 data  ENDS
       END
