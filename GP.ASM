@@ -2,8 +2,13 @@
 ; Part of CHKPESEL v. 2.2 ** GetPESELfromCon rev. 2 ** MOD0623 **
 ;----------------------------------------------------------------------------
 
-cHighlight = 0*16+15            ;highlight = kolor tla*16 + kolor znaku
-cLeadChar  = '.'                ;znak wiodacy w polu
+;Wyroznienie numeru (tu bright white):
+;highlight = kolor tla*16 + kolor znaku
+cHighlight = 0*16+15
+
+;Znak wiodacy w polu PESEL (domyslny FFh, podmieniany w matrycy znakow
+;na osobno zdefiniowany, ale mozna oczywiscie wybrac dowolny)
+cLeadChar  = 0FFh
 
 code SEGMENT PUBLIC 'code'
      PUBLIC GetPESELfromCon

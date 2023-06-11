@@ -1,5 +1,5 @@
 ;----------------------------------------------------------------------------
-; ++++ CHKPESEL v2.2 ++ MAIN rev. 1 ++ MOD0623 ++ (c)1993 'marikaz' ++++
+; ++++ CHKPESEL v2.2 ++ MAIN rev. 2 ++ MOD0623 ++ (c)1993 'marikaz' ++++
 ;----------------------------------------------------------------------------
 ; NOTES:
 ; Program sprawdza poprawnosc numeru PESEL na podstawie sensownosci zakodo-
@@ -43,9 +43,10 @@ Main         PROC
              mov curShapeRef,cx
              mov curShapeCus,cx    ;(tu standardowy)
              mov curShapeHid,2020h ;niewidoczny
+             call SetLeadChar      ;wlasny znak 'wiodacy' dla pola PESEL
 
 do:
-             call ClearForm
+             call ClearForm             ;CI.ASM
              call GetPESELfromCon       ;GP.ASM
              cmp ax,-1
              je exitNow
@@ -82,6 +83,9 @@ while_esc:
              jne while_esc
 
 exitNow:
+             mov ax,1104h     ;przywroc domyslny charset
+             mov bl,0
+             int 10h
              mov ah,2
              mov bx,0
              mov dx,CurPosRef
@@ -97,9 +101,27 @@ exitCL:
              int 21h
 Main         ENDP
 
+SetLeadChar  PROC
+             push es
+             push bp
+             mov ax,cs
+             mov es,ax
+             mov bp,OFFSET leadCh
+             mov dx,WORD PTR 0FFh
+             mov cx,1
+             mov bx,1000h
+             mov ax,1100h
+             int 10h
+             pop bp
+             pop es
+             ret
+leadCh DB 0,0,0,0,0,0,0,10h,0,0,0,0,0,0,0,0
+SetLeadChar  ENDP
+
 code ENDS
 
 data SEGMENT PUBLIC 'data'
+
      PUBLIC pesel,year,month,day,h
      PUBLIC CurShapeRef,CurShapeHid,CurShapeCus,CurPosRef
      PUBLIC statLY,statCL
@@ -115,7 +137,7 @@ CurPosRef     DW ?
 CurShapeRef   DW ?
 CurShapeHid   DW ?
 CurShapeCus   DW ?
-statLY        DB ?   ;LeapYear wpisuje bezposrednio 1:0
+statLY        DB ?   ;LeapYear wpisuje 1:0
 statCL        DB 0   ;status linii polecen
 errlvl        DB 0
 
