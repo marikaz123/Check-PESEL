@@ -2,7 +2,7 @@
 <sup>MOD. 05/2023</sup>
 
 Check PESEL pozwala sprawdzić podany numer PESEL pod wzgledem jego zgodności ze wzorcem nadawania tego numeru. Działa z linii polecen DOS lub z prostym interfejsem.    
-> __W odróżnieniu od "walidatorów" internetowych, program CHKPESEL został przetestowany z najprzeróżniejszymi numerami (dobrymi i zlymi) tak, aby mieć pewność co do poprawności jego działania i zwracanych wyników.__   
+> __W odróżnieniu od internetowych "walidatorów", program CHKPESEL został przetestowany z najprzeróżniejszymi numerami (dobrymi i zlymi) tak, aby mieć pewność co do poprawności jego działania i zwracanych wyników.__   
 
 ## CECHY
 W przeciwieństwie do sprawdzarek internetowych:
@@ -73,18 +73,18 @@ Najbardziej wyczerpujące żródło informacji o numerach seryjnych jakie można
 3. https://pl.wikipedia.org/wiki/PESEL   
 
 ## TOOLS
-Internetowe generatory błędnych nr. PESEL to jakieś nieporozumienie. Podają jakieś absurdalne (krótsze, dłuższe, z literą) numery, których w ogóle nie można wpisać do testowanych systemów. W związku z tym w katalogu /TOOLS znajdują się dwa krótkie programy ułatwiające wygenerowanie do testów 'dobrego' lub (co nawet ważniejsze) 'złego' numeru PESEL.   
+Internetowe generatory błędnych nr. PESEL to jakieś nieporozumienie. Podają absurdalne (krótsze, dłuższe, z literą) numery, których w ogóle nie można wprowadzić do testowanych systemów. W związku z tym w katalogu /TOOLS znajdują się dwa krótkie programy ułatwiające wygenerowanie do testów 'dobrego' lub (co nawet ważniejsze) 'złego' numeru PESEL.   
 - BDGEN.COM - Koduje datę urodzenia. Zakres: 1800 <= rok <= 2299; 0 <= miesiąc <= 19; 0 <= dzień <= 49. Pozwala to na zakodowanie poprawnej, ale również _nie rzucającej się w oczy_, błednej daty urodzenia,   
 - plus 4 cyfry numeru porządkowego trzeba sobie wymyślić i całość wpisać do:
 - CDGEN.COM, który liczy cyfrę kontrolną algorytmem PESEL.   
 
 
 ## HISTORIA WERSJI
-Odgrzanie tego 'kotleta' spowodowaly sprawdzarki internetowe wypisujace totalne bzdury oraz konieczność skorzystania z niezawodnego narzedzia. No i jest... w wersji dla DOS w XXI wieku. :)
+Odgrzanie tego starocia spowodowaly sprawdzarki internetowe wypisujace totalne bzdury oraz konieczność skorzystania z niezawodnego narzedzia. No i jest... w wersji dla DOS w XXI wieku. :)
 
 __ver. 2.2 (06/2023)__   
 `+` Dodano dzień tygodnia dla dat urodzenia, oczywiście tylko dla tych, które już w kalendarzu wystąpiły.   
-`~` Poprawiono trochę interfejs (wyświetlanie daty).   
+`~` Poprawiono trochę interfejs: wyświetlanie daty, "customowy" znak wiodący w polu PESEL.  
 
 __ver. 2.1 (05/2023)__    
 `+` Dodano informację o wieku.   
