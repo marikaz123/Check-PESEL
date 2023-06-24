@@ -30,6 +30,8 @@ Main         PROC
              lea dx,cmdErrTxt
              mov ah,9
              int 21h
+             mov errlvl,-1
+             jmp exitCL
     waUsage:
              lea dx,interface
              mov ah,9
@@ -41,8 +43,8 @@ Main         PROC
              int 10h
              mov curPosRef,dx
              mov curShapeRef,cx
-             mov curShapeCus,cx    ;(tu standardowy)
-             mov curShapeHid,2020h ;niewidoczny
+             mov curShapeCus,cx    ;(wlasny)
+             mov curShapeHid,2020h
              call SetLeadChar      ;wlasny znak 'wiodacy' dla pola PESEL
 
 do:
@@ -106,7 +108,7 @@ SetLeadChar  PROC
              push bp
              mov ax,cs
              mov es,ax
-             mov bp,OFFSET leadCh
+             mov bp,OFFSET leadChar
              mov dx,WORD PTR 0FFh
              mov cx,1
              mov bx,1000h
@@ -115,7 +117,7 @@ SetLeadChar  PROC
              pop bp
              pop es
              ret
-leadCh DB 0,0,0,0,0,0,0,10h,0,0,0,0,0,0,0,0
+leadChar     DB 0,0,0,0,0,0,0,10h,0,0,0,0,0,0,0,0
 SetLeadChar  ENDP
 
 code ENDS
