@@ -21,11 +21,10 @@ GP.OBJ: GP.ASM
 GA.OBJ: GA.ASM
         TASM /m3 GA.ASM
 
-# ALGS.LIB - Algorytmy wyznaczania: roku przestepnego
-#                                   sumy kontrolnej
-#                                   dnia tygodnia
-#
-# Optymalne, nie beda juz zmienianie.
+# ALGS.LIB - Algorytmy wyznaczania:
+# Roku przestepnego (LY)
+# Sumy kontrolnej   (CS)
+# Dnia tygodnia     (DOW)
 
 ALGS.LIB: LY.OBJ CS.OBJ DOW.OBJ
           tlib ALGS.LIB +LY.OBJ +CS.OBJ +DOW.OBJ
