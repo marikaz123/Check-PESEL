@@ -70,7 +70,6 @@ cmdLineMode:
              cmp statCL,1
              je exitCL
              jmp while_esc
-
 wrongPESEL:
              call VeryficationNEG       ;CI.ASM
              cmp statCL,1
@@ -83,11 +82,9 @@ while_esc:
              je do
              cmp al,1bh
              jne while_esc
-
 exitNow:
-             mov ax,1104h     ;przywroc domyslny charset
-             mov bl,0
-             int 10h
+             mov cs:[leadChar+6],0 ;przywroc znak 255
+             call SetLeadChar
              mov ah,2
              mov bx,0
              mov dx,CurPosRef
@@ -117,15 +114,14 @@ SetLeadChar  PROC
              pop bp
              pop es
              ret
-leadChar     DB 0,0,0,0,0,0,0,10h,0,0,0,0,0,0,0,0
 SetLeadChar  ENDP
-
+leadChar     DB 0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0
 code ENDS
 
 data SEGMENT PUBLIC 'data'
 
      PUBLIC pesel,year,month,day,h
-     PUBLIC CurShapeRef,CurShapeHid,CurShapeCus,CurPosRef
+     PUBLIC curShapeRef,curShapeHid,curShapeCus,curPosRef
      PUBLIC statLY,statCL
      PUBLIC dataRegion,endRegion,data0,data1,data2,data3,data4
      PUBLIC errlvl
@@ -135,10 +131,10 @@ year          DW ?
 month         DB ?
 day           DB ?
 h             DW ?
-CurPosRef     DW ?
-CurShapeRef   DW ?
-CurShapeHid   DW ?
-CurShapeCus   DW ?
+curPosRef     DW ?
+curShapeRef   DW ?
+curShapeHid   DW ?
+curShapeCus   DW ?
 statLY        DB ?   ;LeapYear wpisuje 1:0
 statCL        DB 0   ;status linii polecen
 errlvl        DB 0
