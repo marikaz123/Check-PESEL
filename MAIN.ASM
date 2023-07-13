@@ -92,8 +92,6 @@ exitNow:
              mov ah,1
              mov cx,CurShapeRef
              int 10h
-             mov ax,4c00h
-             int 21h
 exitCL:
              mov al,errlvl
              mov ah,4ch
