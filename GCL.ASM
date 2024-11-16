@@ -1,5 +1,5 @@
 ;----------------------------------------------------------------------------
-; CHKPESEL v2.2 ** GetCommandLine rev. A ** MOD0523 **
+; CHKPESEL v2.3 ** MOD2305 **
 ;----------------------------------------------------------------------------
 
 _TEXT SEGMENT WORD PUBLIC 'CODE'
@@ -13,54 +13,51 @@ GetCommandLine   PROC
                  cld
                  mov si,80h
                  cmp BYTE PTR [si],0
-                 je noGCL
+                 je noCL
                  inc si
-         findSW:
+fSwitch:
                  lodsb
-                 cmp ax,'/'
-                 je foundSW
+                 cmp al,'/'
+                 je switch
                  cmp al,20h
-                 je findSW
+                 je fSwitch
                  cmp al,9
-                 je findSW
+                 je fSwitch
                  cmp al,0dh
-                 je noGCL
-        foundSW:
+                 je noCL
+switch:
                  lodsb
                  or al,100000b
                  cmp al,'p'
-                 jne errorGCL
-                 lodsb
-                 cmp al,':'
-                 je skpc
-                 dec si
-           skpc:
+                 jne errCL
+                 cmp BYTE PTR [si],':'
+                 jne skp
+                 inc si
+            skp:
                  lea di,[pesel]
                  mov cx,11
-
-         get11d:
+           g11d:
                  lodsb
                  cmp al,30h
-                 jb errorGCL
+                 jb errCL
                  cmp al,39h
-                 ja errorGCL
+                 ja errCL
                  sub al,30h
                  stosb
-                 loop get11d
-         skipBS:                    ;pomin 'sp' 'tab' po numerze
+                 loop g11d
+          skpBS:
                  lodsb
                  cmp al,20h
-                 je skipBS
+                 je skpBS
                  cmp al,9
-                 je skipBS
+                 je skpBS
                  cmp al,0dh
-                 je setGCL
-
-errorGCL:
-                 add BYTE PTR [statCL],10b
-setGCL:
-                 add BYTE PTR [statCL],1
-noGCL:
+                 je setCL
+errCL:
+                 or BYTE PTR [statCL],10b
+setCL:
+                 or BYTE PTR [statCL],1   ;11b=blad
+noCL:
                  ret
 GetCommandLine   ENDP
 _TEXT ENDS

@@ -1,5 +1,5 @@
 ;----------------------------------------------------------------------------
-; CHKPESEL v2.2 ** GetDayOfWeek rev. A ** MOD0623 **
+; CHKPESEL v2.3 ** MOD2306 **
 ;----------------------------------------------------------------------------
 ; NOTES:
 ; Uproszczony algorytm Zellera, zrodlo Wikipedia (en.)
@@ -26,7 +26,7 @@ GetDayOfWeek      PROC
 @@do:
                   xor dx,dx
                   mov al,q
-                  cbw              ;q zawsze dodatnie
+                  cbw
                   mov h,ax
 
                   mov al,m
@@ -73,9 +73,11 @@ _DATA SEGMENT WORD PUBLIC 'DATA'
 _DATA ENDS
 
 _BSS SEGMENT WORD PUBLIC 'BSS'
-EXTRN h:WORD,year:WORD,month:BYTE,day:BYTE
+     EXTRN h:WORD,year:WORD,month:BYTE,day:BYTE
+
 q    DB ?
 m    DB ?
 Y    DW ?
+
 _BSS ENDS
      END

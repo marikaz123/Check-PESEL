@@ -1,8 +1,7 @@
 ;----------------------------------------------------------------------------
-; CHKPESEL v2.2 ** CheckSum rev. A ** MOD0423 **
+; CHKPESEL v2.3 ** MOD2304 **
 ;----------------------------------------------------------------------------
-; Sposob obliczania cyfry kontrolnej zostal swiadomie zmodyfikowany.
-; https://romek.info/ut/pesel.html
+; UWAGA! Sposob obliczania cyfry kontrolnej zostal swiadomie zmodyfikowany.
 ;----------------------------------------------------------------------------
 
 _TEXT SEGMENT WORD PUBLIC 'CODE'
@@ -23,12 +22,12 @@ CheckSum           PROC
                    add sum,ax
                    inc bx
                    loop @@do
-                   mov ax,sum   ;w bx jest 10
-                   div bx
+                   mov ax,sum
+                   div bx    ;w bx jest 10 z poprzednich dzialan.
                    cmp dl,[pesel+10]
-                   jne errorCS
+                   jne errCS
                    ret
-errorCS:
+errCS:
                    mov ax,-1
                    ret
 CheckSum           ENDP

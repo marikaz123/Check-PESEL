@@ -1,14 +1,13 @@
 ;----------------------------------------------------------------------------
-; ++++ CHKPESEL v2.2 ++ MAIN rev. B ++ MOD0623 ++ (c)1993 'marikaz' ++++
+; ++++ CHKPESEL v2.3 ++ MOD2410 ++ (c)1993 'marikaz' ++++
 ;----------------------------------------------------------------------------
-; NOTES:
-; Program sprawdza poprawnosc numeru PESEL na podstawie sensownosci zakodo-
-; wanej w nim daty urodzenia oraz cyfry kontrolnej.
+; Program sprawdza poprawnosc numeru PESEL na podstawie sensownosci
+; zakodowanej w nim daty urodzenia oraz cyfry kontrolnej.
 ;----------------------------------------------------------------------------
 
 _TEXT SEGMENT WORD PUBLIC 'CODE'
       DGROUP GROUP _DATA,_BSS
-      ASSUME cs:_TEXT,ds:DGROUP
+      ASSUME cs:_TEXT,ds:DGROUP,es:DGROUP
 
       EXTRN GetCommandLine:PROC
       EXTRN GetBirthDate:PROC
@@ -27,13 +26,18 @@ Main         PROC
              cmp statCL,1
              je  cmdLineMode
              cmp statCL,11b
-             jne waUsage
+             jne iMode
              lea dx,cmdErrTxt
              mov ah,9
              int 21h
              mov errlvl,-1
              jmp exitCL
-    waUsage:
+      iMode:
+             lea si,dataRegion ;kopiuj czysty interfejs
+             lea di,buffer0    ;do bufora
+             mov cx,BLEN
+             rep movsb
+
              lea dx,interface
              mov ah,9
              int 21h
@@ -88,10 +92,10 @@ exitNow:
              call @LeadChar
              mov ah,2
              mov bx,0
-             mov dx,CurPosRef
+             mov dx,curPosRef
              int 10h
              mov ah,1
-             mov cx,CurShapeRef
+             mov cx,curShapeRef
              int 10h
 exitCL:
              mov al,errlvl
@@ -113,7 +117,7 @@ Main         ENDP
              pop bp
              pop es
              ret
-leadChar     DB 0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0
+leadChar DB 0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0
 @LeadChar    ENDP
 
 _TEXT ENDS
@@ -121,30 +125,33 @@ _TEXT ENDS
 _DATA SEGMENT WORD PUBLIC 'DATA'
 
 PUBLIC dataRegion,endRegion,data0,data1,data2,data3,data4
-PUBLIC statCL,errlvl,dm
+PUBLIC statCL,errlvl
+PUBLIC BLEN
 
-statCL        DB 0
-errlvl        DB 0
-dm            DW 10
-              INCLUDE iface.inc
+statCL DB 0
+errlvl DB 0
+
+       INCLUDE iface.inc
+
 _DATA ENDS
 
 _BSS SEGMENT WORD PUBLIC 'BSS'
 
 PUBLIC pesel,year,month,day,h
 PUBLIC curShapeRef,curShapeHid,curShapeCus,curPosRef
-public statLY
+PUBLIC statLY,buffer0
 
-pesel         DB 11 DUP (?)
-year          DW ?
-month         DB ?
-day           DB ?
-h             DW ?
-curPosRef     DW ?
-curShapeRef   DW ?
-curShapeHid   DW ?
-curShapeCus   DW ?
-statLY        DB ?
+pesel       DB 11 DUP (?)
+year        DW ?
+month       DB ?
+day         DB ?
+h           DW ?
+curPosRef   DW ?
+curShapeRef DW ?
+curShapeHid DW ?
+curShapeCus DW ?
+statLY      DB ?
+buffer0     DB BLEN DUP (?)
 
 _BSS ENDS
 

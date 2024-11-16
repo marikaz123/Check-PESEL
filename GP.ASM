@@ -1,19 +1,22 @@
 ;----------------------------------------------------------------------------
-; CHKPESEL v2.2 ** GetPESELfromCon rev. C ** MOD0623 **
+; CHKPESEL v2.3 ** MOD2410 **
 ;----------------------------------------------------------------------------
 
-C_HIGHLIGHT = 0*16+15 ;Wyroznienie numeru (tu bright white):
-                      ;highlight = kolor tla*16 + kolor znaku
+;Wyroznienie wpisywanego numeru PESEL:
+;BG = kolor tla, FG = kolor znaku
 
-C_LEADCHAR  = 0FFh    ;Znak wiodacy w polu PESEL (domyslny FFh,
-                      ;podmieniany w matrycy znakow na osobno zdefiniowany,
-                      ;ale mozna oczywiscie wybrac dowolny)
+BG = 0   ;czarny
+FG = 15  ;bialy (jasny)
+
+;Znak wiodacy w polu PESEL (domyslny FFh, podmieniany w matrycy znakow
+;na osobno zdefiniowany, ale mozna oczywiscie wybrac dowolny)
+
+LEADCHAR  = 0FFh     ;Alt. 20h
 
 _TEXT SEGMENT WORD PUBLIC 'CODE'
       DGROUP GROUP _DATA,_BSS
       ASSUME cs:_TEXT,ds:DGROUP
-
-PUBLIC GetPESELfromCon
+      PUBLIC GetPESELfromCon
 
 GetPESELfromCon    PROC
                    mov ah,2
@@ -24,11 +27,11 @@ GetPESELfromCon    PROC
                    mov curPosTMP,dl
                    int 10h
                    mov ah,1
-                   mov cx,[curShapeCus]
+                   mov cx,curShapeCus
                    int 10h
                    mov ah,9
-                   mov bx,C_HIGHLIGHT
-                   mov al,C_LEADCHAR
+                   mov bx,BG SHL 4 OR FG
+                   mov al,LEADCHAR
                    mov cx,11
                    int 10h
                    lea di,pesel
@@ -59,14 +62,14 @@ GetPESELfromCon    PROC
                    jmp wait13h
 decCurPos:
                    push cx
-                   cmp dl,[curPosTMP]
+                   cmp dl,curPosTMP
                    je getDigit
                    dec dl
                    mov ah,2
                    mov bx,0
                    int 10h
                    mov ah,0ah
-                   mov al,C_LEADCHAR
+                   mov al,LEADCHAR
                    mov cx,1
                    int 10h
                    pop cx
@@ -77,7 +80,7 @@ incCurPos:
                    push cx
                    mov ah,9
                    mov cx,1
-                   mov bx,C_HIGHLIGHT
+                   mov bx,BG SHL 4 OR FG
                    int 10h
                    inc dl
                    mov ah,2
@@ -94,7 +97,7 @@ brk:
                    ret
 endPESEL:
                    mov ah,1
-                   mov cx,[curShapeHid]
+                   mov cx,curShapeHid
                    int 10h
                    ret
 GetPESELfromCon    ENDP
@@ -104,8 +107,9 @@ _DATA SEGMENT WORD PUBLIC 'DATA'
 _DATA ENDS
 
 _BSS SEGMENT WORD PUBLIC 'BSS'
-curPosTMP DB ?
      EXTRN pesel:BYTE
      EXTRN CurShapeHid:WORD,CurShapeCus:WORD,CurPosRef:WORD
+
+curPosTMP DB ?
 _BSS ENDS
      END
