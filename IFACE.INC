@@ -17,7 +17,7 @@ dataRegion DB 13,10,' Ocena wzg. wzorca: '
      data2 DB 'DD-MMM-RRRR',20h,20h
      data0 DB 12 DUP (20h),13,10
            DB '              Plec: '
-     data3 DB '-',13,10
+     data3 DB '-',20h,13,10
            DB '              Wiek: '
      data4 DB '-',20h,20h,13,10
 endRegion  LABEL
@@ -25,4 +25,4 @@ endRegion  LABEL
            DB ' [ENTER] Sprawdz / Nastepny      [ESC] Koniec',13,10
            DB 13,10,'$'
 
-BLEN = endRegion - dataRegion
+           BLEN = endRegion - dataRegion

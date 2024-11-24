@@ -108,10 +108,10 @@ GetSex              PROC
                     mov al,[pesel+9]
                     shr al,1
                     jc male
-                    mov data3,'K'
+                    mov WORD PTR data3,' K'
                     ret
               male:
-                    mov data3,'M'
+                    mov WORD PTR data3,' M'
                     ret
 GetSex              ENDP
 
